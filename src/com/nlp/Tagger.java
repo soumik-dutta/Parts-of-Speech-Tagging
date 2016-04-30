@@ -71,7 +71,12 @@ public class Tagger {
         }
     }
 
-    private String getTag(String word) {
+    /**
+     * get the pos tag for the following tag
+     * @param word
+     * @return
+     */
+    public String getTag(String word) {
         String topTag = "";
         FileReader fileReader;
         try {
@@ -80,38 +85,60 @@ public class Tagger {
             Scanner scanner = new Scanner(fileReader);
             Integer index = 0;
             String[] token = new String[2];
+            Boolean isStringMatched=false;
 
             //scanning every line
             while (scanner.hasNextLine()) {
+               // System.out.println(scanner.nextLine());
 
                 //splitting the line into two fields works and pos
-                StringTokenizer stringTokenizer = new StringTokenizer(",", scanner.nextLine());
+                StringTokenizer stringTokenizer = new StringTokenizer(scanner.nextLine().trim(),",");
 
                 //traversing inside the line
                 while (stringTokenizer.hasMoreTokens()) {
+                    String tokenPOS=stringTokenizer.nextToken().trim();
 
+                    if(isStringMatched){
+                        //change the flag to false
+                        isStringMatched=false;
+                        if(tokenPOS.trim().contains(" ")){
+                            //take all the pos and get the top one
+                            StringTokenizer getAllPosTokens=new StringTokenizer(tokenPOS," ");
+                            //get the first pos
+                            if(getAllPosTokens.hasMoreTokens())
+                                topTag=getAllPosTokens.nextToken();
+                        }else{
+                            System.out.println("got token : "+tokenPOS);
+                            topTag=tokenPOS;
+                        }
+                    }
                     //if the word matches then get the top pos value
-                    if (!stringTokenizer.nextElement().toString().trim().equalsIgnoreCase(word)) {
+                    if (!tokenPOS.equalsIgnoreCase(word)) {
                         //break the loop if the word doesnot match
                         break;
                     }
+                    else{
+                        //if the  word matches then
+                        isStringMatched=true;
 
-                    //if the  word matches then
-
+                    }
                 }
-
-                if (index == 100)
-                    break;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return topTag;
     }
+
+
+
+
+
 
     public static void main(String[] args) {
 
+        System.out.println("Hello "+ new Tagger().getTag("hello"));
     }
 
 
