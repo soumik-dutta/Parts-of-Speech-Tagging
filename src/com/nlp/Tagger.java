@@ -2,8 +2,8 @@ package com.nlp;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -19,7 +19,7 @@ public class Tagger {
      * @param word
      * @return
      */
-    private String lingoReplace(String word) {
+    public String lingoReplace(String word) {
         switch (word.toLowerCase()) {
             case "thn":
                 return "then";
@@ -100,7 +100,7 @@ public class Tagger {
 
                     if(isStringMatched){
                         //change the flag to false
-                        isStringMatched=false;
+                        //isStringMatched=false;
                         if(tokenPOS.trim().contains(" ")){
                             //take all the pos and get the top one
                             StringTokenizer getAllPosTokens=new StringTokenizer(tokenPOS," ");
@@ -108,7 +108,6 @@ public class Tagger {
                             if(getAllPosTokens.hasMoreTokens())
                                 topTag=getAllPosTokens.nextToken();
                         }else{
-                            System.out.println("got token : "+tokenPOS);
                             topTag=tokenPOS;
                         }
                     }
@@ -120,9 +119,10 @@ public class Tagger {
                     else{
                         //if the  word matches then
                         isStringMatched=true;
-
                     }
                 }
+                if(isStringMatched)
+                    break;
             }
 
         } catch (Exception e) {
@@ -133,12 +133,69 @@ public class Tagger {
 
 
 
+    public ArrayList<String> posTag(String word){
+        List<String> cleanWords=new ArrayList<String>();
+
+        word = word.replace("[","");
+        word = word.replace("]", "");
+        word = word.replace("(", "");
+        word = word.replace(")", "");
+        word=word.replaceAll("\\?+", "?");
+        word=word.replaceAll("!+", "!");
+        word=word.replaceAll("/\b(i|I)m\b/", "I am");
+        word=word.replaceAll("/\bwe'll\b/i", "we will");
+        word=word.replaceAll("/\bhvn't\b/i", "haven't");
+        word=word.replaceAll("/\bhvn't\b/i", "haven't");
+        word=word.replaceAll("/\bhaven't\b/i", "have not");
+        word=word.replaceAll("/\bhasn't\b/i", "has not");
+        word=word.replaceAll("/\bI'll\b/i", "I will");
+        word=word.replaceAll("/\bI've\b/i", "I have");
+        word=word.replaceAll("/\bWho's\b/i", "who is");
+        word=word.replaceAll("/\bit's\b/i", "it is");
+        word=word.replaceAll("/\blet's\b/i", "let us");
+        word=word.replaceAll("/\bgonna\b/i", "going to");
+        word=word.replaceAll("/\bwanna\b/i", "want to");
+        word=word.replaceAll("/\bgotta\b/i", "got to");
+        word=word.replaceAll("/\bn\b/", "and");
+        word=word.replaceAll("/\blol\b/", "");
+        word=word.replaceAll("((:))|(:P)|(:()|(;))\b", "");
+        word=word.replaceAll("\b(,|\"|(|)|.|:|;|\\?|!)", " $1 ");
+        word=word.replaceAll("\"/\\s+/\", \" \"", " $1 ");
+        word=word.replaceAll("\"/\\s+/\", \" \"", " $1 ");
+
+        word=word.trim();
+        StringTokenizer token=new StringTokenizer(word," ");
+
+        Integer index=0;
+        while(token.hasMoreTokens()){
+
+            String stringToken=token.nextToken();
+
+            //Delingo the word
+            stringToken=lingoReplace(stringToken);
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+        return null;
+    }
+
 
 
 
     public static void main(String[] args) {
 
-        System.out.println("Hello "+ new Tagger().getTag("hello"));
+        System.out.println("Hello "+ new Tagger().getTag("Owned"));
     }
 
 
