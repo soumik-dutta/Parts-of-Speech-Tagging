@@ -75,7 +75,7 @@ public class Tagger {
         String topTag = "";
         FileReader fileReader;
         try {
-            File file = new File("abc.txt");
+            File file = new File("pos_lexicon.txt");
             fileReader = new FileReader(file);
             Scanner scanner = new Scanner(fileReader);
             Integer index = 0;
