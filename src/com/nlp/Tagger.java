@@ -1,11 +1,13 @@
 package com.nlp;
 
+
+
+
+import com.nlp.structure.NameValuePair;
+
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Created by omoto on 30/4/16.
@@ -99,11 +101,14 @@ public class Tagger {
                     String tokenPOS=stringTokenizer.nextToken().trim();
 
                     if(isStringMatched){
+
                         //change the flag to false
                         //isStringMatched=false;
                         if(tokenPOS.trim().contains(" ")){
+
                             //take all the pos and get the top one
                             StringTokenizer getAllPosTokens=new StringTokenizer(tokenPOS," ");
+
                             //get the first pos
                             if(getAllPosTokens.hasMoreTokens())
                                 topTag=getAllPosTokens.nextToken();
@@ -111,12 +116,15 @@ public class Tagger {
                             topTag=tokenPOS;
                         }
                     }
+
                     //if the word matches then get the top pos value
                     if (!tokenPOS.equalsIgnoreCase(word)) {
+
                         //break the loop if the word doesnot match
                         break;
                     }
                     else{
+
                         //if the  word matches then
                         isStringMatched=true;
                     }
@@ -124,7 +132,6 @@ public class Tagger {
                 if(isStringMatched)
                     break;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,7 +141,7 @@ public class Tagger {
 
 
     public ArrayList<String> posTag(String word){
-        List<String> cleanWords=new ArrayList<String>();
+        List<NameValuePair> cleanWords=new ArrayList<NameValuePair>();
 
         word = word.replace("[","");
         word = word.replace("]", "");
@@ -168,11 +175,22 @@ public class Tagger {
 
         Integer index=0;
         while(token.hasMoreTokens()){
-
             String stringToken=token.nextToken();
+            NameValuePair nameValuePair=new NameValuePair();
 
             //Delingo the word
             stringToken=lingoReplace(stringToken);
+
+            //First defaulting it to noun
+            nameValuePair.setName(stringToken);
+            nameValuePair.setValue("NN");
+
+            //if the token is 's,it is PRPS
+            if(stringToken.equalsIgnoreCase("'s"))
+                nameValuePair.setValue("PRPS");
+
+
+
 
 
 
