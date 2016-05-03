@@ -139,7 +139,11 @@ public class Tagger {
     }
 
 
-
+    /**
+     * POS Tagging for the sentences;
+     * @param word
+     * @return
+     */
     public List<NameValuePair> posTag(String word){
         List<NameValuePair> cleanWords=new ArrayList<NameValuePair>();
 
@@ -276,7 +280,10 @@ public class Tagger {
 
     public static void main(String[] args) {
 
-        System.out.println("Hello "+ new Tagger().getTag("Owned"));
+        List<NameValuePair> nameValuePairList=new Tagger().posTag("Jungle Book is an awesome movie");
+        for(NameValuePair nameValuePair:nameValuePairList){
+            System.out.println(" name :  "+nameValuePair.getName()+" ; Value : "+nameValuePair.getValue());
+        }
     }
 
 
