@@ -268,6 +268,9 @@ public class Tagger {
             if(nameValuePair.getValue().equalsIgnoreCase("CD"))
                 nameValuePair.setValue("NNP");
 
+            if(nameValuePair.getValue()!=null && nameValuePair.getValue().equalsIgnoreCase("") )
+                nameValuePair.setValue("NN");
+
             index++;
 
             cleanWords.add(nameValuePair);
@@ -280,7 +283,7 @@ public class Tagger {
 
     public static void main(String[] args) {
 
-        List<NameValuePair> nameValuePairList=new Tagger().posTag("Jungle Book is an awesome movie");
+        List<NameValuePair> nameValuePairList=new Tagger().posTag("Rami Eid is studying at Stony Brook University in New York");
         for(NameValuePair nameValuePair:nameValuePairList){
             System.out.println(" name :  "+nameValuePair.getName()+" ; Value : "+nameValuePair.getValue());
         }
