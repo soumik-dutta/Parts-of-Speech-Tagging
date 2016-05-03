@@ -140,7 +140,7 @@ public class Tagger {
 
 
 
-    public ArrayList<String> posTag(String word){
+    public List<NameValuePair> posTag(String word){
         List<NameValuePair> cleanWords=new ArrayList<NameValuePair>();
 
         word = word.replace("[","");
@@ -189,23 +189,86 @@ public class Tagger {
             if(stringToken.equalsIgnoreCase("'s"))
                 nameValuePair.setValue("PRPS");
 
+            // If it is an 'd, then it is a past tense verb
+            if(stringToken.equalsIgnoreCase("'d"))
+                nameValuePair.setValue("VBR");
+
+            // If it is a verb-adverb compound, tag it as VBR
+            if(stringToken.equalsIgnoreCase("don't")||stringToken.equalsIgnoreCase("can't")||stringToken.equalsIgnoreCase("doesn't")||stringToken.equalsIgnoreCase("haven't"))
+                nameValuePair.setValue("RB");
+
+            // If it is an 't
+            if(stringToken.equalsIgnoreCase("'t")){
+                nameValuePair.setValue("RB");
+                if(index>0){
+                    String bigramchar=cleanWords.get(index-1).getName();
+                    if(bigramchar.equalsIgnoreCase("won")||bigramchar.equalsIgnoreCase("shan")||bigramchar.equalsIgnoreCase("couldn")||bigramchar.equalsIgnoreCase("wouldn")||bigramchar.equalsIgnoreCase("mustn"))
+                        nameValuePair.setValue("RB");
+
+                    else if(bigramchar.equalsIgnoreCase("wasn")||bigramchar.equalsIgnoreCase("didn")||bigramchar.equalsIgnoreCase("weren"))
+                        nameValuePair.setValue("VBD");
+
+                    else if(bigramchar.equalsIgnoreCase("isn")||bigramchar.equalsIgnoreCase("hasn")||bigramchar.equalsIgnoreCase("haven")||bigramchar.equalsIgnoreCase("don")||bigramchar.equalsIgnoreCase("aren")||bigramchar.equalsIgnoreCase("ain"))
+                        nameValuePair.setValue("VBZ");
+
+                    else if(bigramchar.equalsIgnoreCase("had"))
+                        nameValuePair.setValue("VBN");
+                }
+            }
+
+            // If the word is I, then it is not NN, but PRP
+            if(stringToken.equalsIgnoreCase("i"))
+                nameValuePair.setValue("PRP");
+
+            // If the token is US (all caps), then it is a NNP
+            if(stringToken.equalsIgnoreCase("us"))
+                nameValuePair.setValue("NNP");
+
+            // If the token is a double quote, tag it as DBQ
+            if(stringToken.equalsIgnoreCase("\"")||stringToken.equalsIgnoreCase(",\"")||stringToken.equalsIgnoreCase(" \""))
+                nameValuePair.setValue("DBQ");
+
+            // If the token is a number, then tag it as CD (not covered in Lexicon)
+            if(stringToken.matches("/^\\d+$/"))
+                nameValuePair.setValue("CD");
 
 
+            //get the tag from the pos-lexicon data set
+            if(nameValuePair.getValue().equalsIgnoreCase("NN"))
+                nameValuePair.setValue(this.getTag(nameValuePair.getName()));
 
+            if(index>0) {
+                String bigramchar = cleanWords.get(index - 1).getValue();
+                if (bigramchar.equalsIgnoreCase("PRPS") ||bigramchar.equalsIgnoreCase("N")){
+                    nameValuePair.setValue("NN");
+                }
 
+                if(bigramchar.equalsIgnoreCase("VBG") &&(nameValuePair.getValue().equalsIgnoreCase("V")||nameValuePair.getValue().equalsIgnoreCase("MD")) ){
+                    cleanWords.get(index-1).setValue("NN");
+                }
 
+                // If the previous token was I and if the current token is tagged as NN, change it to VBZ
+                if(cleanWords.get(index-1).getName().equalsIgnoreCase("i") && (nameValuePair.getValue().equalsIgnoreCase("N"))){
+                    cleanWords.get(index-1).setValue("VBZ");
+                }
+            }
+
+            if(nameValuePair.getValue().equalsIgnoreCase("VB")){
+                String bigramchar = cleanWords.get(index - 1).getValue();
+                if(bigramchar.equalsIgnoreCase("DT")){
+                    nameValuePair.setValue("NN");
+                }
+            }
+
+            // Special case: if the tag is CD, change it to NNP
+            if(nameValuePair.getValue().equalsIgnoreCase("CD"))
+                nameValuePair.setValue("NNP");
+
+            index++;
+
+            cleanWords.add(nameValuePair);
         }
-
-
-
-
-
-
-
-
-
-
-        return null;
+        return cleanWords;
     }
 
 
