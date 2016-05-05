@@ -82,4 +82,22 @@ public class POSUtils {
         }
         return strings;
     }
+
+
+    public void generateNgrams(Integer N, String sent, List ngramList) {
+        //split sentence into tokens
+        String[] tokens = sent.split("\\s+");
+        //GENERATE THE N-GRAMS
+        for(int k=0; k<(tokens.length-N+1); k++){
+            String s="";
+            int start=k;
+            int end=k+N;
+            for(int j=start; j<end; j++){
+                s=s+""+tokens[j];
+            }
+            //Add n-gram to a list
+            ngramList.add(s);
+        }
+    }//End of method
+
 }
