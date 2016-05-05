@@ -1,7 +1,11 @@
 package com.nlp.utils;
 
+import com.nlp.structure.NameValuePair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by omoto on 4/5/16.
@@ -46,5 +50,36 @@ public class POSUtils {
         sentence.replace("_;_","");
         sentence.trim();
         return sentence;
+    }
+
+    //create POS sentence
+    public String sentencify(List<NameValuePair> tags){
+        String temp="";
+        for(NameValuePair tokenTags:tags){
+            temp=(!temp.equalsIgnoreCase(""))?temp+"_"+tokenTags.getName()+"_"+tokenTags.getValue():temp+""+tokenTags.getName()+"_"+tokenTags.getValue();
+        }
+        return temp;
+    }
+
+    //Delimit the posSentence so that it can be displayed in multiple lines
+    public String delimit(String str){
+        return str.replace("_"," _ ");
+    }
+
+    //convert some selected words to small letters
+    public List<String> toSplLower(String word){
+
+        List<String> strings=new ArrayList<String>();
+        StringTokenizer stringTokenizer=new StringTokenizer(word);
+        while(stringTokenizer.hasMoreTokens()){
+            String token=stringTokenizer.nextToken();
+            //change the case if the charecter matches
+            if(token=="The"||token=="A"||token=="An"||token=="That"||token=="This"){
+                strings.add(token.toLowerCase());
+            }
+            else
+                strings.add(token);
+        }
+        return strings;
     }
 }

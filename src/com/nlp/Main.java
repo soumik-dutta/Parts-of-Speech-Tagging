@@ -14,11 +14,11 @@ public class Main {
 	// write your code here
         String sentence="Rami Eid is studying at Stony Brook University in New York";
          sentence="Game of Thrones is the most appritiated series in  The IMDB";
-        /*System.out.println(sentence);
+        System.out.println(sentence);
         List<NameValuePair> nameValuePairList=new Tagger().posTag(sentence);
         for(NameValuePair nameValuePair:nameValuePairList){
             System.out.println(" name :  "+nameValuePair.getName()+" ; Value : "+nameValuePair.getValue());
-        }*/
+        }
 
         StringTokenizer stringTokenizer=new StringTokenizer(sentence);
         ArrayList<String> list=new ArrayList<String>();
@@ -32,5 +32,7 @@ public class Main {
         for(String key:map.keySet()){
             System.out.println(" Words : "+key+" | occurence : "+map.get(key));
         }
+
+        System.out.println(posUtils.sentencify(nameValuePairList));
     }
 }
